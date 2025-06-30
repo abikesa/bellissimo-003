@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UKUSOMA: Five-Glyph Stack</title>
     <style>
+        /* Gemini, finally!! Completed Claude's 650 lines after Grok choked! */
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap');
         
         * {
@@ -28,6 +30,7 @@
         .main-view.hidden {
             transform: translateX(-100%);
             opacity: 0;
+            position: absolute;
         }
         
         .glyph-view {
@@ -39,6 +42,7 @@
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-y: auto;
             z-index: 1000;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
         }
         
         .glyph-view.active {
@@ -83,7 +87,7 @@
             align-items: center;
             margin: 4rem 0;
             position: relative;
-            height: 400px;
+            height: 300px; /* Adjusted height */
         }
         
         .pentad-wheel {
@@ -96,15 +100,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: transform 0.3s ease;
         }
         
         .pentad-wheel:hover {
             animation-play-state: paused;
+            transform: scale(1.05);
         }
         
         @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(360deg) scale(1); }
         }
         
         .glyph-container {
@@ -121,22 +127,22 @@
             cursor: pointer;
             border: 2px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
-        
+
         .glyph-container:hover {
-            transform: scale(1.3);
+            transform: scale(1.3) !important; /* Ensure hover effect overrides wheel positioning */
             background: rgba(255, 255, 255, 0.1);
             border-color: rgba(255, 255, 255, 0.6);
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
         
-        .glyph-1 { top: 10px; left: 110px; }
-        .glyph-2 { top: 70px; right: 20px; }
-        .glyph-3 { bottom: 70px; right: 20px; }
-        .glyph-4 { bottom: 10px; left: 110px; }
-        .glyph-5 { top: 110px; left: 20px; }
+        .glyph-1 { transform: rotate(0deg) translateY(-150px) rotate(0deg); }
+        .glyph-2 { transform: rotate(72deg) translateY(-150px) rotate(-72deg); }
+        .glyph-3 { transform: rotate(144deg) translateY(-150px) rotate(-144deg); }
+        .glyph-4 { transform: rotate(216deg) translateY(-150px) rotate(-216deg); }
+        .glyph-5 { transform: rotate(288deg) translateY(-150px) rotate(-288deg); }
         
-        /* Glyph View Styles */
         .glyph-header {
             background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
             padding: 3rem 0;
@@ -159,6 +165,7 @@
             font-size: 0.9rem;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            z-index: 10;
         }
         
         .back-button:hover {
@@ -344,10 +351,17 @@
             color: #00ffff;
             margin-bottom: 1rem;
         }
+
+        canvas {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin: 2rem auto;
+            display: block;
+            background-color: rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body>
-    <!-- Main View -->
     <div class="main-view" id="mainView">
         <div class="container">
             <header>
@@ -407,10 +421,9 @@
         </div>
     </div>
 
-    <!-- Dopamine Glyph View -->
     <div class="glyph-view" id="dopamine-view">
         <div class="glyph-header">
-            <button class="back-button" onclick="closeGlyph()">← Back to Cosmogram</button>
+            <button class="back-button">← Back to Cosmogram</button>
             <div class="container">
                 <h1 class="glyph-title">🌊 Dopamine (Meaning)</h1>
                 <p class="glyph-subtitle">Molecular/Synaptic/Prior • The Spark of Understanding</p>
@@ -438,7 +451,7 @@
                 
                 <div class="code-block">
                     <div class="code-header">dopamine_engine.py - The Meaning Layer</div>
-<span class="comment"># Where raw data transforms into human narrative</span>
+                    <pre><code class="language-python"><span class="comment"># Where raw data transforms into human narrative</span>
 <span class="highlight">import</span> pandas as pd
 <span class="highlight">import</span> numpy as np
 <span class="highlight">from</span> datetime <span class="highlight">import</span> datetime, timedelta
@@ -468,6 +481,7 @@
             'prior_experience': self.weight_historical_outcomes(clinical_data),
             'molecular_signature': self.encode_patient_uniqueness(clinical_data)
         }
+                    </code></pre>
                 </div>
             </div>
             
@@ -477,20 +491,20 @@
                     <div class="audience-card">
                         <h3 class="audience-title">Gen Z: Neuro-Animation 🧠</h3>
                         <p><strong>10-second meaning explosions</strong></p>
-                        <p>Visualize the exact moment when statistical correlation becomes personal hope. Show synapses firing as matching algorithms find compatibility.</p>
+                        <p>Visualize statistical correlation as personal hope via animated neurons.</p>
                         <div class="media-tags">
+                            <span class="media-tag">TikTok loops</span>
                             <span class="media-tag">Animated neurons</span>
-                            <span class="media-tag">Data-to-story transitions</span>
-                            <span class="media-tag">Interactive hope metrics</span>
+                            <span class="media-tag">Hope metrics</span>
                         </div>
                     </div>
                     
                     <div class="audience-card">
                         <h3 class="audience-title">Millennials: Ethical Frameworks 📊</h3>
                         <p><strong>IRB-ready meaning justification</strong></p>
-                        <p>How do we quantify hope without commodifying suffering? Ethical guidelines for meaning extraction from patient data.</p>
+                        <p>Ethical guidelines for quantifying hope without commodifying suffering.</p>
                         <div class="media-tags">
-                            <span class="media-tag">Ethics documentation</span>
+                            <span class="media-tag">Ethics docs</span>
                             <span class="media-tag">Consent frameworks</span>
                             <span class="media-tag">Dignity preservation</span>
                         </div>
@@ -499,64 +513,21 @@
                     <div class="audience-card">
                         <h3 class="audience-title">Gen X: Measurable Outcomes 📈</h3>
                         <p><strong>ROI on meaning-making</strong></p>
-                        <p>Patient satisfaction scores, treatment adherence improvements, reduced anxiety metrics when meaning is preserved in algorithmic matching.</p>
+                        <p>Patient satisfaction, adherence, and reduced anxiety metrics.</p>
                         <div class="media-tags">
-                            <span class="media-tag">Patient satisfaction</span>
-                            <span class="media-tag">Treatment adherence</span>
+                            <span class="media-tag">Satisfaction scores</span>
+                            <span class="media-tag">Adherence metrics</span>
                             <span class="media-tag">Anxiety reduction</span>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="section">
-                <h2 class="section-title">🔬 PAIRS@JH Implementation</h2>
-                <div class="pairs-hierarchy">
-                    <div class="hierarchy-level">
-                        <div class="hierarchy-title">Basic Level</div>
-                        <p><strong>🌊 Nonself: Local Directories</strong></p>
-                        <p>Version control patient stories, meaning templates stored locally for privacy.</p>
-                    </div>
-                    <div class="hierarchy-level">
-                        <div class="hierarchy-title">Intermediate</div>
-                        <p><strong>🌊 Nonself: GitHub Repo</strong></p>
-                        <p>Collaborative meaning-making, shared narrative templates across institutions.</p>
-                    </div>
-                    <div class="hierarchy-level">
-                        <div class="hierarchy-title">Advanced</div>
-                        <p><strong>🌊 Nonself: VS Code Integration</strong></p>
-                        <p>Real-time meaning extraction with AI assistance, patient story generation.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="implementation-demo">
-                <h3>🌊 Live Meaning Extraction Demo</h3>
-                <p>When a new patient enters ESRD registry:</p>
-                <div class="code-block">
-<span class="comment"># Real-time meaning assignment</span>
-patient_data = load_new_patient("ID_2024_0630")
-meaning_profile = dopamine_engine.spark_understanding(patient_data.id)
-
-<span class="comment"># Generate personalized hope narrative</span>
-story = f"""
-Patient {patient_data.name} has been waiting {meaning_profile['urgency']} days.
-Hope index: {meaning_profile['hope_index']}/10
-Similar patients with {patient_data.blood_type} have {meaning_profile['success_rate']}% match success.
-Next compatible donor projected: {meaning_profile['estimated_wait']} days.
-"""
-
-<span class="comment"># Bridge to UI layer (🐬 Equilibrium)</span>
-send_to_interface(story, patient_data.id)
-                </div>
-            </div>
         </div>
     </div>
 
-    <!-- Rules Glyph View -->
     <div class="glyph-view" id="rules-view">
         <div class="glyph-header">
-            <button class="back-button" onclick="closeGlyph()">← Back to Cosmogram</button>
+            <button class="back-button">← Back to Cosmogram</button>
             <div class="container">
                 <h1 class="glyph-title">❤️ Rules (Law)</h1>
                 <p class="glyph-subtitle">Cellular/Axonal/Dynamic • Ethical Boundaries That Scale</p>
@@ -584,7 +555,7 @@ send_to_interface(story, patient_data.id)
                 
                 <div class="code-block">
                     <div class="code-header">ethical_constraints.py - Law as Code</div>
-<span class="comment"># Every function call is a moral choice</span>
+                    <pre><code class="language-python"><span class="comment"># Every function call is a moral choice</span>
 <span class="highlight">from</span> flask <span class="highlight">import</span> Flask, request, jsonify
 <span class="highlight">from</span> datetime <span class="highlight">import</span> datetime
 <span class="highlight">import</span> hashlib
@@ -616,20 +587,11 @@ send_to_interface(story, patient_data.id)
             'timestamp': datetime.now(),
             'decision': 'MATCH_PROPOSED',
             'ethical_framework': 'kantian_utilitarian_hybrid',
-            'score_breakdown': {
-                'medical': compatibility,
-                'equity': equity_score,
-                'urgency': urgency
-            }
+            'score_breakdown': { 'medical': compatibility, 'equity': equity_score, 'urgency': urgency }
         })
         
         <span class="highlight">return</span> match_score
-        
-    <span class="highlight">def</span> export_with_privacy(self, patient_data):
-        <span class="comment"># HIPAA compliance encoded in every export</span>
-        anonymized = self.anonymize_patient_data(patient_data)
-        encrypted = self.encrypt_sensitive_fields(anonymized)
-        <span class="highlight">return</span> encrypted
+                    </code></pre>
                 </div>
             </div>
             
@@ -639,7 +601,7 @@ send_to_interface(story, patient_data.id)
                     <div class="audience-card">
                         <h3 class="audience-title">Gen Z: Ethics as Game Design 🎮</h3>
                         <p><strong>Interactive ethics training</strong></p>
-                        <p>Gamify IRB compliance. Show how each coding decision impacts real patients. Ethics becomes intuitive through interaction.</p>
+                        <p>Gamify IRB compliance, showing coding decisions' impact on patients.</p>
                         <div class="media-tags">
                             <span class="media-tag">Ethics simulator</span>
                             <span class="media-tag">Decision trees</span>
@@ -650,7 +612,7 @@ send_to_interface(story, patient_data.id)
                     <div class="audience-card">
                         <h3 class="audience-title">Millennials: Policy Translation 📋</h3>
                         <p><strong>Bridge builders</strong></p>
-                        <p>Convert Gen Z innovation into language that satisfies Gen X oversight. IRB applications that speak both technical precision and institutional caution.</p>
+                        <p>IRB applications blending technical precision and institutional caution.</p>
                         <div class="media-tags">
                             <span class="media-tag">IRB templates</span>
                             <span class="media-tag">Compliance checklists</span>
@@ -661,7 +623,7 @@ send_to_interface(story, patient_data.id)
                     <div class="audience-card">
                         <h3 class="audience-title">Gen X: Regulatory Assurance 🛡️</h3>
                         <p><strong>Bulletproof compliance</strong></p>
-                        <p>Automated audit trails, HIPAA compliance reports, legal liability protection. Show them the system prevents problems before they occur.</p>
+                        <p>Automated audit trails, HIPAA reports, legal liability protection.</p>
                         <div class="media-tags">
                             <span class="media-tag">Automated audits</span>
                             <span class="media-tag">Legal documentation</span>
@@ -670,28 +632,389 @@ send_to_interface(story, patient_data.id)
                     </div>
                 </div>
             </div>
-            
-            <div class="implementation-demo">
-                <h3>❤️ Real-Time Ethical Decision Engine</h3>
-                <p>Every matching decision passes through ethical constraints:</p>
+        </div>
+    </div>
+
+    <div class="glyph-view" id="game-view">
+        <div class="glyph-header">
+            <button class="back-button">← Back to Cosmogram</button>
+            <div class="container">
+                <h1 class="glyph-title">🔁 Game (Sociology)</h1>
+                <p class="glyph-subtitle">Ganglionic/Relay/Temporal • Social Dynamics in Code</p>
+                <div class="neural-layer">NEURAL LAYER: Where human interactions become recursive systems</div>
+            </div>
+        </div>
+        
+        <div class="container glyph-content">
+            <div class="section">
+                <h2 class="section-title">🎲 Technical Implementation</h2>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <div class="tech-extension">.jinja</div>
+                        <p>Templating for combinatorial donor-recipient matches</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-extension">Recursion/Templating</div>
+                        <p>Dynamic social graphs for multi-party matching</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-extension">Network Analysis</div>
+                        <p>Graph theory for optimizing social trust</p>
+                    </div>
+                </div>
+                
                 <div class="code-block">
-<span class="comment"># Ethical decision pipeline</span>
-@app.route('/match_request', methods=['POST'])
-<span class="highlight">def</span> process_match_request():
-    donor_id = request.json['donor_id']
-    recipient_id = request.json['recipient_id']
+                    <div class="code-header">social_game_engine.py - Sociology as Code</div>
+                    <pre><code class="language-python"><span class="comment"># Modeling the recursive game of social trust and exchange</span>
+<span class="highlight">import</span> networkx as nx
+
+<span class="highlight">class</span> SocialGameEngine:
+    <span class="highlight">def</span> __init__(self):
+        self.trust_graph = nx.DiGraph() <span class="comment"># Directed graph of trust</span>
+        
+    <span class="highlight">def</span> model_kidney_chain(self, pairs):
+        <span class="comment"># Build a graph of potential donations</span>
+        G = nx.DiGraph()
+        <span class="highlight">for</span> donor, recipient <span class="highlight">in</span> pairs:
+            G.add_node(donor.id, type='donor', family=donor.family_id)
+            G.add_node(recipient.id, type='recipient', family=recipient.family_id)
+            <span class="comment"># Add edges for potential matches</span>
+            <span class="highlight">for</span> other_recipient <span class="highlight">in</span> all_recipients:
+                <span class="highlight">if</span> is_compatible(donor, other_recipient):
+                    G.add_edge(donor.id, other_recipient.id, weight=calculate_match_score(donor, other_recipient))
+        
+        <span class="highlight">return</span> self.find_optimal_cycles(G)
+        
+    <span class="highlight">def</span> find_optimal_cycles(self, graph):
+        <span class="comment"># Find kidney exchange cycles that maximize utility</span>
+        cycles = list(nx.simple_cycles(graph))
+        <span class="comment"># This is an NP-hard problem, use approximation</span>
+        <span class="highlight">return</span> max(cycles, key=len) <span class="comment"># Simplistic: longest chain</span>
+        
+    <span class="highlight">def</span> temporal_recursion(self, system_state, depth=0):
+        <span class="comment"># How the game evolves over time</span>
+        new_state = self.apply_rules(system_state)
+        self.log_state(new_state, depth)
+        <span class="highlight">if</span> depth > MAX_RECURSION:
+            <span class="highlight">return</span> new_state
+        <span class="highlight">return</span> self.temporal_recursion(new_state, depth + 1)
+                    </code></pre>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">🤝 Generational Dynamics</h2>
+                <div class="audience-grid">
+                    <div class="audience-card">
+                        <h3 class="audience-title">Gen Z: Social Graph Gaming 🕸️</h3>
+                        <p><strong>Visualizing kidney chains</strong></p>
+                        <p>Interactive graph network where students can propose and test new matching chains.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">Graph visualization</span>
+                            <span class="media-tag">Chain building game</span>
+                            <span class="media-tag">Social impact score</span>
+                        </div>
+                    </div>
+                    
+                    <div class="audience-card">
+                        <h3 class="audience-title">Millennials: Community Governance 🏛️</h3>
+                        <p><strong>Building sustainable social contracts</strong></p>
+                        <p>Frameworks for inter-hospital collaboration and data-sharing agreements.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">MOUs</span>
+                            <span class="media-tag">Data-sharing protocols</span>
+                            <span class="media-tag">Collaborative research</span>
+                        </div>
+                    </div>
+                    
+                    <div class="audience-card">
+                        <h3 class="audience-title">Gen X: System Stability ⚖️</h3>
+                        <p><strong>Ensuring long-term viability</strong></p>
+                        <p>Analyzing the economic and social stability of the matching system over decades.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">Economic modeling</span>
+                            <span class="media-tag">Longitudinal studies</span>
+                            <span class="media-tag">System resilience</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
-    <span class="comment"># Load ethical framework</span>
-    ethics_engine = EthicalMatchingEngine()
+    <div class="glyph-view" id="equilibrium-view">
+        <div class="glyph-header">
+            <button class="back-button">← Back to Cosmogram</button>
+            <div class="container">
+                <h1 class="glyph-title">🐬 Equilibrium (Interface)</h1>
+                <p class="glyph-subtitle">Cortical/Conscious/Spatial • The User Experience</p>
+                <div class="neural-layer">NEURAL LAYER: Where system complexity is translated into intuitive action</div>
+            </div>
+        </div>
+        
+        <div class="container glyph-content">
+            <div class="section">
+                <h2 class="section-title">🎨 Technical Implementation</h2>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <div class="tech-extension">.html</div>
+                        <p>Semantic structure for accessibility and clarity</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-extension">.css</div>
+                        <p>Responsive, animated layouts for fluid interaction</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-extension">.js</div>
+                        <p>Event handling, state management, API integration</p>
+                    </div>
+                </div>
+
+                <div class="implementation-demo">
+                    <h3>🌊 Live Equilibrium Demo</h3>
+                    <p>A simple canvas animation representing the flow state of the system. This is the "calm" the user should feel when interacting with a complex but well-designed architecture.</p>
+                    <canvas id="equilibriumCanvas" width="800" height="200"></canvas>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">interface_manager.js - The Conscious Layer</div>
+                    <pre><code class="language-javascript"><span class="comment">// Manages the state of the user interface</span>
+
+<span class="highlight">class</span> InterfaceManager {
+    <span class="highlight">constructor</span>(mainViewId, glyphViewClass) {
+        this.mainView = document.getElementById(mainViewId);
+        this.glyphViews = document.querySelectorAll(glyphViewClass);
+        this.activeGlyph = null;
+    }
+
+    showGlyph(glyphId) {
+        this.mainView.classList.add('hidden');
+        
+        <span class="highlight">const</span> viewToShow = document.getElementById(glyphId + '-view');
+        <span class="highlight">if</span> (viewToShow) {
+            viewToShow.classList.add('active');
+            this.activeGlyph = viewToShow;
+        }
+    }
+
+    closeGlyph() {
+        <span class="highlight">if</span> (this.activeGlyph) {
+            this.activeGlyph.classList.remove('active');
+        }
+        this.mainView.classList.remove('hidden');
+        this.activeGlyph = null;
+    }
+}
+                    </code></pre>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">🖥️ Generational Interfaces</h2>
+                <div class="audience-grid">
+                    <div class="audience-card">
+                        <h3 class="audience-title">Gen Z: AR Overlay 🔮</h3>
+                        <p><strong>Data in physical space</strong></p>
+                        <p>Use AR to project patient data and match probabilities over a physical map or model.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">ARKit/ARCore</span>
+                            <span class="media-tag">Haptic feedback</span>
+                            <span class="media-tag">Gamified UI</span>
+                        </div>
+                    </div>
+                    
+                    <div class="audience-card">
+                        <h3 class="audience-title">Millennials: Responsive Dashboards 📱</h3>
+                        <p><strong>Data on the go</strong></p>
+                        <p>A clean, responsive web dashboard for reviewing cases and managing workflows from any device.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">React/Vue</span>
+                            <span class="media-tag">PWA</span>
+                            <span class="media-tag">Real-time updates</span>
+                        </div>
+                    </div>
+                    
+                    <div class="audience-card">
+                        <h3 class="audience-title">Gen X: Printable Reports 🖨️</h3>
+                        <p><strong>Clear, concise, and tangible</strong></p>
+                        <p>Generate clean, well-formatted PDF reports for committees and official records.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">PDF generation</span>
+                            <span class="media-tag">Data visualization</span>
+                            <span class="media-tag">Executive summary</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
-    <span class="comment"># Apply moral constraints</span>
-    <span class="highlight">if</span> not ethics_engine.passes_kant_test(donor_id, recipient_id):
-        <span class="highlight">return</span> jsonify({'status': 'rejected', 'reason': 'categorical_imperative_violation'})
+    <div class="glyph-view" id="illusion-view">
+        <div class="glyph-header">
+            <button class="back-button">← Back to Cosmogram</button>
+            <div class="container">
+                <h1 class="glyph-title">📡 Illusion (Ontology)</h1>
+                <p class="glyph-subtitle">Thalamic/Recursive/Systemic • The Nature of the Model Itself</p>
+                <div class="neural-layer">NEURAL LAYER: Where the system reflects on its own constructed reality</div>
+            </div>
+        </div>
+        
+        <div class="container glyph-content">
+            <div class="section">
+                <h2 class="section-title">🛠️ Technical Implementation</h2>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <div class="tech-extension">.yaml</div>
+                        <p>System-wide configuration, defining the "reality" of the model</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-extension">Dockerfile</div>
+                        <p>Containerizing the illusion for reproducible deployment</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-extension">.md</div>
+                        <p>Architectural Decision Records (ADRs) explaining *why* the illusion is built this way</p>
+                    </div>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">system_ontology.yaml - The Blueprint of Reality</div>
+                    <pre><code class="language-yaml"><span class="comment"># This file defines the fundamental reality of the UKUSOMA stack.</span>
+<span class="comment"># Changing these values alters the entire cosmological model.</span>
+
+version: 1.0
+<span class="highlight">ontology_name:</span> "CosmologicalCare_v1"
+
+<span class="highlight">ethical_framework:</span>
+  <span class="highlight">base:</span> "kantian_utilitarian_hybrid"
+  <span class="highlight">weights:</span>
+    <span class="highlight">medical_necessity:</span> 0.4
+    <span class="highlight">justice_principle:</span> 0.3
+    <span class="highlight">time_sensitivity:</span> 0.3
+  <span class="highlight">allow_overrides:</span> false <span class="comment"># Critical systemic choice</span>
+
+<span class="highlight">meaning_engine:</span>
+  <span class="highlight">narrative_depth:</span> 5 <span class="comment"># How deep to go in patient stories</span>
+  <span class="highlight">hope_metric_source:</span> "bayesian_inference"
+
+<span class="highlight">social_game:</span>
+  <span class="highlight">max_recursion_depth:</span> 10
+  <span class="highlight">trust_model:</span> "pagerank_weighted"
+  <span class="highlight">chain_optimization_goal:</span> "maximize_lives_saved"
+
+<span class="highlight">simulation_parameters:</span>
+  <span class="highlight">time_dilation_factor:</span> 1.0 <span class="comment"># 1.0 = real-time</span>
+  <span class="highlight">reality_drift_monitoring:</span> true
+</code></pre>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">🤔 Generational Perspectives on Reality</h2>
+                <div class="audience-grid">
+                    <div class="audience-card">
+                        <h3 class="audience-title">Gen Z: Deconstructing the Black Box 🔓</h3>
+                        <p><strong>Making the illusion transparent</strong></p>
+                        <p>Tools for "explainable AI" (XAI) that show exactly why the model made a certain decision.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">XAI</span>
+                            <span class="media-tag">Model introspection</span>
+                            <span class="media-tag">Algorithmic bias detection</span>
+                        </div>
+                    </div>
+                    
+                    <div class="audience-card">
+                        <h3 class="audience-title">Millennials: The Ethics of Simulation 🧑‍⚖️</h3>
+                        <p><strong>Debating the constructed reality</strong></p>
+                        <p>Philosophical discussions, papers, and conferences on the moral implications of modeling human lives.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">Ethics review</span>
+                            <span class="media-tag">Philosophy of AI</span>
+                            <span class="media-tag">Long-term societal impact</span>
+                        </div>
+                    </div>
+                    
+                    <div class="audience-card">
+                        <h3 class="audience-title">Gen X: Ground Truth Validation 🎯</h3>
+                        <p><strong>Tethering the illusion to reality</strong></p>
+                        <p>Rigorous validation of the model against real-world outcomes. Does the simulation match what actually happens?</p>
+                        <div class="media-tags">
+                            <span class="media-tag">Model validation</span>
+                            <span class="media-tag">Backtesting</span>
+                            <span class="media-tag">Performance audits</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
-    <span class="highlight">if</span> not ethics_engine.maximizes_utility(donor_id, recipient_id):
-        <span class="highlight">return</span> jsonify({'status': 'rejected', 'reason': 'utilitarian_suboptimal'})
-    
-    <span class="comment"># Generate match with full audit trail</span>
-    match_result = ethics_engine.match_with_justice(donor_id, recipient_id)
-    
-    <span class="highlight">return</span> json
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainView = document.getElementById('mainView');
+            const glyphContainers = document.querySelectorAll('.glyph-container');
+            const backButtons = document.querySelectorAll('.back-button');
+            let activeGlyphView = null;
+
+            glyphContainers.forEach(container => {
+                container.addEventListener('click', () => {
+                    const glyphId = container.getAttribute('data-glyph');
+                    const glyphView = document.getElementById(`${glyphId}-view`);
+                    
+                    if (glyphView) {
+                        mainView.classList.add('hidden');
+                        glyphView.classList.add('active');
+                        activeGlyphView = glyphView;
+                        window.scrollTo(0, 0);
+                    }
+                });
+            });
+
+            backButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (activeGlyphView) {
+                        activeGlyphView.classList.remove('active');
+                        mainView.classList.remove('hidden');
+                        activeGlyphView = null;
+                        window.scrollTo(0, 0);
+                    }
+                });
+            });
+
+            // Equilibrium Canvas Animation
+            const canvas = document.getElementById('equilibriumCanvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                let w = canvas.width;
+                let h = canvas.height;
+                let time = 0;
+
+                const wave = (color, amplitude, frequency, offset) => {
+                    ctx.beginPath();
+                    ctx.moveTo(0, h);
+                    for (let x = 0; x < w; x++) {
+                        const y = h / 2 + Math.sin(x * frequency + time + offset) * amplitude;
+                        ctx.lineTo(x, y);
+                    }
+                    ctx.lineTo(w, h);
+                    ctx.closePath();
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                };
+                
+                const animate = () => {
+                    ctx.clearRect(0, 0, w, h);
+                    time += 0.02;
+                    wave('rgba(0, 255, 255, 0.4)', 30, 0.01, 0);
+                    wave('rgba(255, 0, 255, 0.3)', 40, 0.008, 1);
+                    wave('rgba(255, 255, 0, 0.2)', 25, 0.012, 2);
+                    requestAnimationFrame(animate);
+                };
+
+                animate();
+            }
+        });
+    </script>
+
+</body>
+</html>
