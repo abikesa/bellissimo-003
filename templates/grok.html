@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="description" content="Ukusoma: Five-Glyph Stack for cosmological care">
+    <title>UKUSOMA: Five-Glyph Stack</title>
+    <link rel="manifest" href="./manifest.json">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+        .title {
+            font-family: 'Space Mono', monospace;
+            font-size: 3rem;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ff00, #ff6600);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit_issue_fill-color: transparent;
+            animation: gradientShift 8s ease-in-out infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 2rem;
+        }
+        .pentad-wheel {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 2rem auto;
+            border-radius: 50%;
+            background: conic-gradient(#00ffff, #ff00ff, #ffff00, #00ff00, #ff6600, #00ffff);
+            animation: rotate 20s linear infinite;
+        }
+        .pentad-wheel:hover {
+            animation-play-state: paused;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .glyph {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        .glyph:hover {
+            transform: scale(1.2);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        .glyph-1 { top: 20px; left: 120px; }
+        .glyph-2 { top: 80px; right: 20px; }
+        .glyph-3 { bottom: 80px; right: 20px; }
+        .glyph-4 { bottom: 20px; left: 120px; }
+        .glyph-5 { top: 120px; left: 20px; }
+        .glyph-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glyph-content.active {
+            display: block;
+        }
+        .glyph-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 2rem;
+            color: #00ffff;
+            margin-bottom: 1rem;
+        }
+        .code-block {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            text-align: left;
+            margin: 1rem 0;
+        }
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .audience-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .pulsing {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        .simulator, .network, .dashboard, .insights {
+            margin: 1rem 0;
+        }
+        canvas, svg {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">UKUSOMA</h1>
+        <p class="subtitle">Five-Glyph Stack: Code. Care. Cosmos. 🔁</p>
+        
+        <div class="pentad-wheel">
+            <div class="glyph glyph-1" data-glyph="dopamine">🌊</div>
+            <div class="glyph glyph-2" data-glyph="rules">❤️</div>
+            <div class="glyph glyph-3" data-glyph="game">🔁</div>
+            <div class="glyph glyph-4" data-glyph="equilibrium">🐬</div>
+            <div class="glyph glyph-5" data-glyph="illusion">📡</div>
+        </div>
+
+        <!-- 🌊 Dopamine (Meaning) -->
+        <div class="glyph-content" id="dopamine-content">
+            <h2 class="glyph-title">🌊 Dopamine (Meaning)</h2>
+            <p>Spark hope with patient stories. Transform ESRD data into meaning.</p>
+            <div class="simulator">
+                <input id="patientId" type="text" placeholder="Enter Patient ID (e.g., 2024_0630)">
+                <button onclick="generateHope()">Generate Hope</button>
+                <p id="hopeOutput"></p>
+            </div>
+            <div class="code-block">
+                // Client-side CSV parsing and hope metric<br>
+                const csvData = `id,name,waitDays,bloodType<br>2024_0630,Alex,120,A+<br>2024_0631,Beth,90,O-`;<br>
+                function parseCSV(data) {<br>
+                    const rows = data.split('\n').slice(1);<br>
+                    return rows.map(row => {<br>
+                        const [id, name, waitDays, bloodType] = row.split(',');<br>
+                        return { id, name, waitDays: parseInt(waitDays), bloodType };<br>
+                    });<br>
+                }<br>
+                function generateHopeMetric(patient) {<br>
+                    return Math.min(10, 5 + patient.waitDays / 60).toFixed(1);<br>
+                }
+            </div>
+            <div class="audience-grid">
+                <div class="audience-card">Gen Z: TikTok animations 📱</div>
+                <div class="audience-card">Millennials: Ethical reports 🧑‍💼</div>
+                <div class="audience-card">Gen X: Outcome metrics 📈</div>
+            </div>
+        </div>
+
+        <!-- ❤️ Rules (Law) -->
+        <div class="glyph-content" id="rules-content">
+            <h2 class="glyph-title">❤️ Rules (Law)</h2>
+            <p>Encode ethics in every match. Try the Ethics Simulator!</p>
+            <div class="simulator">
+                <button onclick="runEthicsSim()">Run Ethics Simulator</button>
+                <p id="ethicsOutput"></p>
+            </div>
+            <div class="code-block">
+                // Ethics Simulator: Check compliance<br>
+                function checkCompliance(data) {<br>
+                    const fairness = Math.random() * 1.2;<br>
+                    return data.hipaa && fairness > 0.7 ? 'PASS: Ethical match' : 'FAIL: Fairness violation';<br>
+                }<br>
+                const demoData = { hipaa: true, donor: 'D1', recipient: 'R1' };<br>
+                console.log(checkCompliance(demoData));
+            </div>
+            <div class="audience-grid">
+                <div class="audience-card">Gen Z: Ethics games 🎮</div>
+                <div class="audience-card">Millennials: IRB templates 📋</div>
+                <div class="audience-card">Gen X: Audit logs 🛡️</div>
+            </div>
+        </div>
+
+        <!-- 🔁 Game (Sociology) -->
+        <div class="glyph-content" id="game-content">
+            <h2 class="glyph-title">🔁 Game (Sociology)</h2>
+            <p>Visualize recursive donor-recipient matches.</p>
+            <div class="network" id="network"></div>
+            <div class="code-block">
+                // D3.js Network Visualization<br>
+                const networkData = {<br>
+                    nodes: [{id: 'D1'}, {id: 'R1'}, {id: 'R2'}],<br>
+                    links: [{source: 'D1', target: 'R1'}, {source: 'D1', target: 'R2'}]<br>
+                };<br>
+                // Rendered dynamically below
+            </div>
+            <div class="audience-grid">
+                <div class="audience-card">Gen Z: Network games 🎲</div>
+                <div class="audience-card">Millennials: Collab tools 🧑‍💻</div>
+                <diviors: System (2)
+                <div class="audience-card">Gen X: System trust 🤝</div>
+            </div>
+        </div>
+
+        <!-- �� Equilibrium (Politics) -->
+        <div class="glyph-content" id="equilibrium-content">
+            <h2 class="glyph-title">🐬 Equilibrium (Politics)</h2>
+            <p>Track matches for stakeholders.</p>
+            <div class="dashboard">
+                <canvas id="matchChart"></canvas>
+            </div>
+            <div class="code-block">
+                // Chart施
+                const stats = { success: 42, pending: 15, waitlisted: 100 };<br>
+                // Chart rendered below
+            </div>
+            <div class="audience-grid">
+                <div class="audience-card">Gen Z: Visual dashboards 📊</div>
+                <div class="audience-card">Millennials: Grant reports 📄</div>
+                <div class="audience-card">Gen X: Secure access 🔒</div>
+            </div>
+        </div>
+
+        <!-- 📡 Illusion (Religion) -->
+        <div class="glyph-content" id="illusion-content">
+            <h2 class="glyph-title">📡 Illusion (Religion)</h2>
+            <p>Reflect on truth in code.</p>
+            <div class="insights">
+                <button onclick="generateInsight()">Generate Insight</button>
+                <p id="insightOutput"></p>
+            </div>
+            <div class="code-block">
+                // Insight Generator<br>
+                const insights = [<br>
+                    'Every match is a prayer in code.',<br>
+                    'Data seeks truth in chaos.',<br>
+                    'Code is our ritual for care.'<br>
+                ];<br>
+                function getInsight() {<br>
+                    return insights[Math.floor(Math.random() * insights.length)];<br>
+                }
+            </div>
+            <div class="audience-grid">
+                <div class="audience-card">Gen Z: Shareable quotes 📲</div>
+                <div class="audience-card">Millennials: Podcasts 🎙️</div>
+                <div class="audience-card">Gen X: Ethical narratives 📖</div>
+            </div>
+        </div>
+
+        <p class="pulsing" style="margin-top: 2rem;">#Ukusoma #maketh-billionaires</p>
+    </div>
+
+    <script>
+        // Glyph Toggle
+        document.querySelectorAll('.glyph').forEach(glyph => {
+            glyph.addEventListener('click', () => {
+                document.querySelectorAll('.glyph-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`${glyph.dataset.glyph}-content`).classList.add('active');
+            });
+        });
+
+        // 🌊 Dopamine: Hope Generator
+        function generateHope() {
+            const csvData = `id,name,waitDays,bloodType
+2024_0630,Alex,120,A+
+2024_0631,Beth,90,O-`;
+            const patients = csvData.split('\n').slice(1).map(row => {
+                const [id, name, waitDays, bloodType] = row.split(',');
+                return { id, name, waitDays: parseInt(waitDays), bloodType };
+            });
+            const id = document.getElementById('patientId').value;
+            const patient = patients.find(p => p.id === id);
+            const output = patient
+                ? `Hope for ${patient.name}: ${Math.min(10, 5 + patient.waitDays / 60).toFixed(1)}/10`
+                : 'Patient not found';
+            document.getElementById('hopeOutput').textContent = output;
+        }
+
+        // ❤️ Rules: Ethics Simulator
+        function runEthicsSim() {
+            const result = Math.random() > 0.3 ? 'PASS: Ethical match' : 'FAIL: Fairness violation';
+            document.getElementById('ethicsOutput').textContent = result;
+        }
+
+        // 🔁 Game: Network Visualization
+        const networkData = {
+            nodes: [{id: 'D1'}, {id: 'R1'}, {id: 'R2'}],
+            links: [{source: 'D1', target: 'R1'}, {source: 'D1', target: 'R2'}]
+        };
+        const svg = d3.select('#network').append('svg').attr('width', 300).attr('height', 200);
+        const simulation = d3.forceSimulation(networkData.nodes)
+            .force('link', d3.forceLink(networkData.links).distance(100))
+            .force('charge', d3.forceManyBody().strength(-100))
+            .force('center', d3.forceCenter(150, 100));
+        const link = svg.selectAll('.link')
+            .data(networkData.links)
+            .enter().append('line')
+            .attr('stroke', '#00ffff')
+            .attr('stroke-width', 2);
+        const node = svg.selectAll('.node')
+            .data(networkData.nodes)
+            .enter().append('circle')
+            .attr('r', 10)
+            .attr('fill', '#ff00ff');
+        simulation.on('tick', () => {
+            link
+                .attr('x1', d => d.source.x)
+                .attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x)
+                .attr('y2', d => d.target.y);
+            node
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y);
+        });
+
+        // 🐬 Equilibrium: Dashboard
+        new Chart(document.getElementById('matchChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Success', 'Pending', 'Waitlisted'],
+                datasets: [{
+                    label: 'Match Status',
+                    data: [42, 15, 100],
+                    backgroundColor: ['#00ffff', '#ff00ff', '#ffff00']
+                }]
+            },
+            options: { scales: { y: { beginZero: true } } }
+        });
+
+        // 📡 Illusion: Insight Generator
+        function generateInsight() {
+            const insights = [
+                'Every match is a prayer in code.',
+                'Data seeks truth in chaos.',
+                'Code is our ritual for care.'
+            ];
+            const insight = insights[Math.floor(Math.random() * insights.length)];
+            document.getElementById('insightOutput').textContent = insight;
+            if (navigator.share) {
+                navigator.share({ title: 'Ukusoma Insight', text: insight, url: window.location.href });
+            }
+        }
+
+        // PWA Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
+

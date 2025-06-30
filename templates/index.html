@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UKUSOMA: Five-Glyph Stack</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .main-view {
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .main-view.hidden {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        
+        .glyph-view {
+            position: fixed;
+            top: 0;
+            left: 100%;
+            width: 100%;
+            height: 100vh;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .glyph-view.active {
+            left: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .title {
+            font-family: 'Space Mono', monospace;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ff00, #ff6600);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 8s ease-in-out infinite;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+            font-family: 'Space Mono', monospace;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .pentad-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 4rem 0;
+            position: relative;
+            height: 400px;
+        }
+        
+        .pentad-wheel {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #00ffff, #ff00ff, #ffff00, #00ff00, #ff6600, #00ffff);
+            animation: rotate 20s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .pentad-wheel:hover {
+            animation-play-state: paused;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .glyph-container {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+        }
+        
+        .glyph-container:hover {
+            transform: scale(1.3);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        }
+        
+        .glyph-1 { top: 10px; left: 110px; }
+        .glyph-2 { top: 70px; right: 20px; }
+        .glyph-3 { bottom: 70px; right: 20px; }
+        .glyph-4 { bottom: 10px; left: 110px; }
+        .glyph-5 { top: 110px; left: 20px; }
+        
+        /* Glyph View Styles */
+        .glyph-header {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            padding: 3rem 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+        
+        .glyph-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .glyph-subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+        
+        .glyph-content {
+            padding: 3rem 0;
+        }
+        
+        .section {
+            margin-bottom: 4rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .section-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.8rem;
+            color: #00ffff;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-header {
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+        
+        .highlight {
+            color: #00ffff;
+        }
+        
+        .comment {
+            color: #888;
+            font-style: italic;
+        }
+        
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .audience-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .audience-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .audience-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #00ffff;
+        }
+        
+        .media-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .media-tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .neural-layer {
+            font-family: 'Space Mono', monospace;
+            color: #ff6600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .tech-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .tech-extension {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            color: #00ffff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pulsing {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        .implementation-demo {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .pairs-hierarchy {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .hierarchy-level {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .hierarchy-title {
+            font-family: 'Space Mono', monospace;
+            color: #00ffff;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main View -->
+    <div class="main-view" id="mainView">
+        <div class="container">
+            <header>
+                <h1 class="title">UKUSOMA</h1>
+                <p class="subtitle">Five-Glyph Stack: Cosmological Care Architecture</p>
+            </header>
+            
+            <div class="pentad-container">
+                <div class="pentad-wheel">
+                    <div class="glyph-container glyph-1" data-glyph="dopamine">🌊</div>
+                    <div class="glyph-container glyph-2" data-glyph="rules">❤️</div>
+                    <div class="glyph-container glyph-3" data-glyph="game">🔁</div>
+                    <div class="glyph-container glyph-4" data-glyph="equilibrium">🐬</div>
+                    <div class="glyph-container glyph-5" data-glyph="illusion">📡</div>
+                </div>
+            </div>
+            
+            <div class="audience-grid">
+                <div class="audience-card">
+                    <h3 class="audience-title">Gen Z Targets 📱</h3>
+                    <p><strong>Graduate Students (Primary)</strong></p>
+                    <p>Interactive learning, code-alongs, ethical recursion workshops.</p>
+                    <div class="media-tags">
+                        <span class="media-tag">TikTok loops</span>
+                        <span class="media-tag">Interactive .gif</span>
+                        <span class="media-tag">Twitch coding</span>
+                    </div>
+                </div>
+                
+                <div class="audience-card">
+                    <h3 class="audience-title">Millennial Mentors 🧑‍💼</h3>
+                    <p><strong>Advisory Layer</strong></p>
+                    <p>Grant writing, IRB navigation, ethical frameworks.</p>
+                    <div class="media-tags">
+                        <span class="media-tag">Newsletter</span>
+                        <span class="media-tag">Podcast</span>
+                        <span class="media-tag">Slide decks</span>
+                    </div>
+                </div>
+                
+                <div class="audience-card">
+                    <h3 class="audience-title">Gen X Guardians 🧓</h3>
+                    <p><strong>Authority & Resources</strong></p>
+                    <p>PIs, regulators, donor families. Control funding and approval.</p>
+                    <div class="media-tags">
+                        <span class="media-tag">PDF reports</span>
+                        <span class="media-tag">YouTube explainers</span>
+                        <span class="media-tag">Dashboard access</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 4rem; padding: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); font-family: 'Space Mono', monospace; color: #666;">
+                <p>🔁 PAIRS@JH • Late Night Cosmology • Fee Structure Justified</p>
+                <p class="pulsing">#maketh-billionaires</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dopamine Glyph View -->
+    <div class="glyph-view" id="dopamine-view">
+        <div class="glyph-header">
+            <button class="back-button" onclick="closeGlyph()">← Back to Cosmogram</button>
+            <div class="container">
+                <h1 class="glyph-title">🌊 Dopamine (Meaning)</h1>
+                <p class="glyph-subtitle">Molecular/Synaptic/Prior • The Spark of Understanding</p>
+                <div class="neural-layer">NEURAL LAYER: Where data becomes experience, statistics become stories</div>
+            </div>
+        </div>
+        
+        <div class="container glyph-content">
+            <div class="section">
+                <h2 class="section-title">🧬 Technical Implementation</h2>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <div class="tech-extension">.csv</div>
+                        <p>ESRD patient data, donor registries, waiting list dynamics</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-extension">Dynamic Templates</div>
+                        <p>Patient story generation, outcome visualization</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-extension">Static Base</div>
+                        <p>Historical matching success rates, demographic patterns</p>
+                    </div>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">dopamine_engine.py - The Meaning Layer</div>
+<span class="comment"># Where raw data transforms into human narrative</span>
+<span class="highlight">import</span> pandas as pd
+<span class="highlight">import</span> numpy as np
+<span class="highlight">from</span> datetime <span class="highlight">import</span> datetime, timedelta
+
+<span class="highlight">class</span> MeaningEngine:
+    <span class="highlight">def</span> __init__(self, esrd_data_path):
+        self.patients = pd.read_csv(esrd_data_path)
+        self.stories = {}  <span class="comment"># Patient narratives</span>
+        
+    <span class="highlight">def</span> spark_understanding(self, patient_id):
+        <span class="comment"># Transform clinical data into lived experience</span>
+        patient = self.patients[self.patients.id == patient_id]
+        waiting_days = (datetime.now() - patient.list_date).days
+        
+        story = {
+            'urgency': self.calculate_urgency(waiting_days),
+            'hope_index': self.generate_hope_metric(patient),
+            'meaning_vector': self.extract_narrative(patient)
+        }
+        
+        <span class="highlight">return</span> story
+        
+    <span class="highlight">def</span> neurosymbolic_bridge(self, clinical_data):
+        <span class="comment"># Bridge between synaptic firing and symbolic meaning</span>
+        <span class="highlight">return</span> {
+            'dopamine_trigger': clinical_data.improvement_likelihood,
+            'prior_experience': self.weight_historical_outcomes(clinical_data),
+            'molecular_signature': self.encode_patient_uniqueness(clinical_data)
+        }
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">🎯 Generational Targeting</h2>
+                <div class="audience-grid">
+                    <div class="audience-card">
+                        <h3 class="audience-title">Gen Z: Neuro-Animation 🧠</h3>
+                        <p><strong>10-second meaning explosions</strong></p>
+                        <p>Visualize the exact moment when statistical correlation becomes personal hope. Show synapses firing as matching algorithms find compatibility.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">Animated neurons</span>
+                            <span class="media-tag">Data-to-story transitions</span>
+                            <span class="media-tag">Interactive hope metrics</span>
+                        </div>
+                    </div>
+                    
+                    <div class="audience-card">
+                        <h3 class="audience-title">Millennials: Ethical Frameworks 📊</h3>
+                        <p><strong>IRB-ready meaning justification</strong></p>
+                        <p>How do we quantify hope without commodifying suffering? Ethical guidelines for meaning extraction from patient data.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">Ethics documentation</span>
+                            <span class="media-tag">Consent frameworks</span>
+                            <span class="media-tag">Dignity preservation</span>
+                        </div>
+                    </div>
+                    
+                    <div class="audience-card">
+                        <h3 class="audience-title">Gen X: Measurable Outcomes 📈</h3>
+                        <p><strong>ROI on meaning-making</strong></p>
+                        <p>Patient satisfaction scores, treatment adherence improvements, reduced anxiety metrics when meaning is preserved in algorithmic matching.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">Patient satisfaction</span>
+                            <span class="media-tag">Treatment adherence</span>
+                            <span class="media-tag">Anxiety reduction</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">🔬 PAIRS@JH Implementation</h2>
+                <div class="pairs-hierarchy">
+                    <div class="hierarchy-level">
+                        <div class="hierarchy-title">Basic Level</div>
+                        <p><strong>🌊 Nonself: Local Directories</strong></p>
+                        <p>Version control patient stories, meaning templates stored locally for privacy.</p>
+                    </div>
+                    <div class="hierarchy-level">
+                        <div class="hierarchy-title">Intermediate</div>
+                        <p><strong>🌊 Nonself: GitHub Repo</strong></p>
+                        <p>Collaborative meaning-making, shared narrative templates across institutions.</p>
+                    </div>
+                    <div class="hierarchy-level">
+                        <div class="hierarchy-title">Advanced</div>
+                        <p><strong>🌊 Nonself: VS Code Integration</strong></p>
+                        <p>Real-time meaning extraction with AI assistance, patient story generation.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="implementation-demo">
+                <h3>🌊 Live Meaning Extraction Demo</h3>
+                <p>When a new patient enters ESRD registry:</p>
+                <div class="code-block">
+<span class="comment"># Real-time meaning assignment</span>
+patient_data = load_new_patient("ID_2024_0630")
+meaning_profile = dopamine_engine.spark_understanding(patient_data.id)
+
+<span class="comment"># Generate personalized hope narrative</span>
+story = f"""
+Patient {patient_data.name} has been waiting {meaning_profile['urgency']} days.
+Hope index: {meaning_profile['hope_index']}/10
+Similar patients with {patient_data.blood_type} have {meaning_profile['success_rate']}% match success.
+Next compatible donor projected: {meaning_profile['estimated_wait']} days.
+"""
+
+<span class="comment"># Bridge to UI layer (🐬 Equilibrium)</span>
+send_to_interface(story, patient_data.id)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rules Glyph View -->
+    <div class="glyph-view" id="rules-view">
+        <div class="glyph-header">
+            <button class="back-button" onclick="closeGlyph()">← Back to Cosmogram</button>
+            <div class="container">
+                <h1 class="glyph-title">❤️ Rules (Law)</h1>
+                <p class="glyph-subtitle">Cellular/Axonal/Dynamic • Ethical Boundaries That Scale</p>
+                <div class="neural-layer">NEURAL LAYER: Where moral choices become algorithmic constraints</div>
+            </div>
+        </div>
+        
+        <div class="container glyph-content">
+            <div class="section">
+                <h2 class="section-title">⚖️ Technical Implementation</h2>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <div class="tech-extension">.py</div>
+                        <p>Flask endpoints, donor/recipient matching algorithms</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-extension">Import/Export/Replace</div>
+                        <p>HIPAA-compliant data boundaries, audit trails</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-extension">Constraint Systems</div>
+                        <p>Medical ethics encoded as programmatic rules</p>
+                    </div>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">ethical_constraints.py - Law as Code</div>
+<span class="comment"># Every function call is a moral choice</span>
+<span class="highlight">from</span> flask <span class="highlight">import</span> Flask, request, jsonify
+<span class="highlight">from</span> datetime <span class="highlight">import</span> datetime
+<span class="highlight">import</span> hashlib
+
+<span class="highlight">class</span> EthicalMatchingEngine:
+    <span class="highlight">def</span> __init__(self):
+        self.hipaa_compliance = True
+        self.fairness_algorithm = 'equity_weighted'
+        self.audit_trail = []
+        
+    <span class="highlight">def</span> match_with_justice(self, donor, recipient):
+        <span class="comment"># Each match decision carries moral weight</span>
+        compatibility = self.check_medical_compatibility(donor, recipient)
+        equity_score = self.calculate_equity_impact(recipient)
+        urgency = self.assess_medical_urgency(recipient)
+        
+        <span class="comment"># Ethical constraints as code</span>
+        <span class="highlight">if</span> self.violates_fairness_principle(recipient):
+            self.log_ethical_decision("REJECTED: Fairness violation", recipient.id)
+            <span class="highlight">return</span> None
+            
+        match_score = self.weighted_ethical_score(
+            compatibility * 0.4,  <span class="comment"># Medical necessity</span>
+            equity_score * 0.3,   <span class="comment"># Justice principle</span>
+            urgency * 0.3         <span class="comment"># Time sensitivity</span>
+        )
+        
+        self.audit_trail.append({
+            'timestamp': datetime.now(),
+            'decision': 'MATCH_PROPOSED',
+            'ethical_framework': 'kantian_utilitarian_hybrid',
+            'score_breakdown': {
+                'medical': compatibility,
+                'equity': equity_score,
+                'urgency': urgency
+            }
+        })
+        
+        <span class="highlight">return</span> match_score
+        
+    <span class="highlight">def</span> export_with_privacy(self, patient_data):
+        <span class="comment"># HIPAA compliance encoded in every export</span>
+        anonymized = self.anonymize_patient_data(patient_data)
+        encrypted = self.encrypt_sensitive_fields(anonymized)
+        <span class="highlight">return</span> encrypted
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">🏛️ Institutional Navigation</h2>
+                <div class="audience-grid">
+                    <div class="audience-card">
+                        <h3 class="audience-title">Gen Z: Ethics as Game Design 🎮</h3>
+                        <p><strong>Interactive ethics training</strong></p>
+                        <p>Gamify IRB compliance. Show how each coding decision impacts real patients. Ethics becomes intuitive through interaction.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">Ethics simulator</span>
+                            <span class="media-tag">Decision trees</span>
+                            <span class="media-tag">Impact visualization</span>
+                        </div>
+                    </div>
+                    
+                    <div class="audience-card">
+                        <h3 class="audience-title">Millennials: Policy Translation 📋</h3>
+                        <p><strong>Bridge builders</strong></p>
+                        <p>Convert Gen Z innovation into language that satisfies Gen X oversight. IRB applications that speak both technical precision and institutional caution.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">IRB templates</span>
+                            <span class="media-tag">Compliance checklists</span>
+                            <span class="media-tag">Risk assessments</span>
+                        </div>
+                    </div>
+                    
+                    <div class="audience-card">
+                        <h3 class="audience-title">Gen X: Regulatory Assurance 🛡️</h3>
+                        <p><strong>Bulletproof compliance</strong></p>
+                        <p>Automated audit trails, HIPAA compliance reports, legal liability protection. Show them the system prevents problems before they occur.</p>
+                        <div class="media-tags">
+                            <span class="media-tag">Automated audits</span>
+                            <span class="media-tag">Legal documentation</span>
+                            <span class="media-tag">Risk mitigation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="implementation-demo">
+                <h3>❤️ Real-Time Ethical Decision Engine</h3>
+                <p>Every matching decision passes through ethical constraints:</p>
+                <div class="code-block">
+<span class="comment"># Ethical decision pipeline</span>
+@app.route('/match_request', methods=['POST'])
+<span class="highlight">def</span> process_match_request():
+    donor_id = request.json['donor_id']
+    recipient_id = request.json['recipient_id']
+    
+    <span class="comment"># Load ethical framework</span>
+    ethics_engine = EthicalMatchingEngine()
+    
+    <span class="comment"># Apply moral constraints</span>
+    <span class="highlight">if</span> not ethics_engine.passes_kant_test(donor_id, recipient_id):
+        <span class="highlight">return</span> jsonify({'status': 'rejected', 'reason': 'categorical_imperative_violation'})
+    
+    <span class="highlight">if</span> not ethics_engine.maximizes_utility(donor_id, recipient_id):
+        <span class="highlight">return</span> jsonify({'status': 'rejected', 'reason': 'utilitarian_suboptimal'})
+    
+    <span class="comment"># Generate match with full audit trail</span>
+    match_result = ethics_engine.match_with_justice(donor_id, recipient_id)
+    
+    <span class="highlight">return</span> json
