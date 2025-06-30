@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UKUSOMA: Five-Glyph Stack</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .title {
+            font-family: 'Space Mono', monospace;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ff00, #ff6600);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 8s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .pentad-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 4rem 0;
+            position: relative;
+            height: 400px;
+        }
+        
+        .pentad-wheel {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #00ffff, #ff00ff, #ffff00, #00ff00, #ff6600, #00ffff);
+            animation: rotate 20s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .pentad-wheel:hover {
+            transform: scale(1.1);
+            animation-play-state: paused;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .glyph-container {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .glyph-container:hover {
+            transform: scale(1.5);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .glyph-1 { top: 20px; left: 120px; }
+        .glyph-2 { top: 80px; right: 30px; }
+        .glyph-3 { bottom: 80px; right: 30px; }
+        .glyph-4 { bottom: 20px; left: 120px; }
+        .glyph-5 { top: 120px; left: 30px; }
+        
+        .info-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 400px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-panel.active {
+            opacity: 1;
+        }
+        
+        .info-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #00ffff;
+        }
+        
+        .info-description {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+        
+        .info-tech {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: #888;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+        }
+        
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+        
+        .audience-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .audience-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .audience-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #00ffff;
+        }
+        
+        .media-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .media-tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: 'Space Mono', monospace;
+            color: #666;
+        }
+        
+        .pulsing {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">UKUSOMA</h1>
+            <p class="subtitle">Five-Glyph Stack: Cosmological Care Architecture</p>
+        </header>
+        
+        <div class="pentad-container">
+            <div class="pentad-wheel" id="pentadWheel">
+                <div class="glyph-container glyph-1" data-glyph="dopamine">🌊</div>
+                <div class="glyph-container glyph-2" data-glyph="rules">❤️</div>
+                <div class="glyph-container glyph-3" data-glyph="game">🔁</div>
+                <div class="glyph-container glyph-4" data-glyph="equilibrium">🐬</div>
+                <div class="glyph-container glyph-5" data-glyph="illusion">📡</div>
+            </div>
+            
+            <div class="info-panel" id="infoPanel">
+                <div class="info-title" id="infoTitle">UKUSOMA</div>
+                <div class="info-description" id="infoDescription">
+                    Interactive cosmogram where each glyph represents a layer of the generational software stack. 
+                    Click a glyph to explore its domain and technical implementation.
+                </div>
+                <div class="info-tech" id="infoTech">
+                    Pentad-glyph constraint • Ritualistic cybernetics • Care architecture
+                </div>
+            </div>
+        </div>
+        
+        <div class="audience-grid">
+            <div class="audience-card">
+                <h3 class="audience-title">Gen Z Targets 📱</h3>
+                <p><strong>Graduate Students (Primary)</strong></p>
+                <p>Interactive learning, code-alongs, ethical recursion workshops. They're building the future—give them tools that feel like magic.</p>
+                <div class="media-tags">
+                    <span class="media-tag">TikTok loops</span>
+                    <span class="media-tag">Interactive .gif</span>
+                    <span class="media-tag">Twitch coding</span>
+                    <span class="media-tag">Animated SVG</span>
+                </div>
+            </div>
+            
+            <div class="audience-card">
+                <h3 class="audience-title">Millennial Mentors 🧑‍💼</h3>
+                <p><strong>Advisory Layer</strong></p>
+                <p>Grant writing, IRB navigation, ethical frameworks. They translate between generations and institutions.</p>
+                <div class="media-tags">
+                    <span class="media-tag">Newsletter</span>
+                    <span class="media-tag">Podcast</span>
+                    <span class="media-tag">Slide decks</span>
+                    <span class="media-tag">Code walkthroughs</span>
+                </div>
+            </div>
+            
+            <div class="audience-card">
+                <h3 class="audience-title">Gen X Guardians 🧓</h3>
+                <p><strong>Authority & Resources</strong></p>
+                <p>PIs, regulators, donor families. They control funding and institutional approval. Speak their language: results, compliance, impact.</p>
+                <div class="media-tags">
+                    <span class="media-tag">PDF reports</span>
+                    <span class="media-tag">YouTube explainers</span>
+                    <span class="media-tag">Dashboard access</span>
+                    <span class="media-tag">Audit trails</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🔁 PAIRS@JH • Late Night Cosmology • Fee Structure Justified</p>
+            <p class="pulsing">#maketh-billionaires</p>
+        </div>
+    </div>
+    
+    <script>
+        const glyphs = {
+            dopamine: {
+                title: "🌊 Dopamine (Meaning)",
+                description: "Molecular/Synaptic/Prior layer. The spark that ignites understanding. Where .csv data becomes lived experience and statistical significance meets human dignity.",
+                tech: ".csv • ESRD data • Dynamic templates • Neurosymbolic intro"
+            },
+            rules: {
+                title: "❤️ Rules (Law)",
+                description: "Cellular/Axonal/Dynamic layer. Ethical boundaries that scale. Where IRB approval meets algorithmic justice and every import/export decision carries moral weight.",
+                tech: ".py • Flask endpoints • Import/Export/Replace • Constraint systems"
+            },
+            game: {
+                title: "🔁 Game (Sociology)",
+                description: "Ganglionic/Relay/Temporal layer. The recursive heart of the system. Where matching algorithms become social contracts and templating creates infinite possibility.",
+                tech: ".jinja • Combinatorial space • Recursion/Templating • Social dynamics"
+            },
+            equilibrium: {
+                title: "🐬 Equilibrium (Politics)",
+                description: "Hippocampus/Network/Static layer. Institutional memory and diplomatic balance. Where UI/UX meets policy and user feedback shapes systemic change.",
+                tech: ".html • UI/UX • Groups/Summaries • Feedback loops"
+            },
+            illusion: {
+                title: "📡 Illusion (Religion)",
+                description: "Insular/Gradient/Flourish layer. The cosmic signal in the noise. Where API calls become prayers and YAML configurations touch the infinite.",
+                tech: ".yaml • API/remote • Server architecture • Transcendent rendering"
+            }
+        };
+        
+        const glyphElements = document.querySelectorAll('.glyph-container');
+        const infoPanel = document.getElementById('infoPanel');
+        const infoTitle = document.getElementById('infoTitle');
+        const infoDescription = document.getElementById('infoDescription');
+        const infoTech = document.getElementById('infoTech');
+        
+        glyphElements.forEach(glyph => {
+            glyph.addEventListener('click', () => {
+                const glyphType = glyph.dataset.glyph;
+                const glyphData = glyphs[glyphType];
+                
+                if (glyphData) {
+                    infoTitle.textContent = glyphData.title;
+                    infoDescription.textContent = glyphData.description;
+                    infoTech.textContent = glyphData.tech;
+                    infoPanel.classList.add('active');
+                }
+            });
+        });
+        
+        // Click outside to close
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.glyph-container') && !e.target.closest('.info-panel')) {
+                infoPanel.classList.remove('active');
+            }
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                infoPanel.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
